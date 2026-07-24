@@ -4,25 +4,14 @@ import FilterBtn from "./FilterBtn";
 function SideNav(){
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [isFiltered, setIsFiltered] = useState<boolean>(false);
+    const [selectedButton, setSelectedButton] = useState<String>("All");
 
-    const handleFilter = () => {
-        console.log("Filter diklik!");
-        if(!isFiltered){
-            setIsFiltered(true);
-        }
-        else{
-            setIsFiltered(false);
-        }
+    const handleNavigation = (buttonName: string) => {
+        setSelectedButton(buttonName);
     };
 
     const toggle = ()=>{
-        if(!isOpen){
-            setIsOpen(true);
-        }
-        else{
-            setIsOpen(false);
-        }
+        setIsOpen((prev)=>!prev);
     }
 
 
@@ -30,7 +19,7 @@ function SideNav(){
     return (
         <>
             <div
-                className="bg-[#00214F] flex flex-col p-3 gap-6"
+                className="bg-[#00214F] flex flex-col p-3 gap-6 md:max-w-xs md:min-h-screen md:py-6"
             >
                 <div 
                     className="flex flex-row justify-between md:flex-col md:justify-center"
@@ -49,7 +38,7 @@ function SideNav(){
                             <h1 className="text-white font-semibold text-2xl">
                                 HIMTI
                             </h1>
-                            <h2 className="text-white font-medium text-sm">
+                            <h2 className="text-white font-medium text-lg">
                                 EventHub
                             </h2>
                         </div>
@@ -70,8 +59,13 @@ function SideNav(){
                             />
                         )}
                     </div>
-                </div>
-                {isOpen && (
+                </div>    
+                <div 
+                    className={`
+                        ${isOpen? "flex" : "hidden"}
+                        md:flex flex-col justify-between gap-6 flex-1
+                    `}
+                >
                     <div
                         className="flex flex-col gap-3"
                     >
@@ -82,36 +76,50 @@ function SideNav(){
                         </h1>
                         <FilterBtn
                             name = "All"
-                            onClick={handleFilter}
-                            isActive = {isFiltered}
+                            onClick={()=> handleNavigation("All")}
+                            isActive = {selectedButton === "All"}
                         />
                         <FilterBtn
-                            name = "Greater Jakarta"
-                            onClick={handleFilter}
-                            isActive = {isFiltered}
+                                name = "Greater Jakarta"
+                            onClick={()=> handleNavigation("Greater Jakarta")}
+                            isActive = {selectedButton === "Greater Jakarta"}
                         />
                         <FilterBtn
                             name = "Bandung"
-                            onClick={handleFilter}
-                            isActive = {isFiltered}
+                            onClick={()=> handleNavigation("Bandung")}
+                            isActive = {selectedButton === "Bandung"}
                         />
                         <FilterBtn
                             name = "Malang"
-                            onClick={handleFilter}
-                            isActive = {isFiltered}
+                            onClick={()=> handleNavigation("Malang")}
+                            isActive = {selectedButton === "Malang"}
                         />
                         <FilterBtn
                             name = "Semarang"
-                            onClick={handleFilter}
-                            isActive = {isFiltered}
+                            onClick={()=> handleNavigation("Semarang")}
+                            isActive = {selectedButton === "Semarang"}
                         />
                         <FilterBtn
                             name = "Online"
-                            onClick={handleFilter}
-                            isActive = {isFiltered}
+                            onClick={()=> handleNavigation("Online")}
+                            isActive = {selectedButton === "Online"}
                         />
                     </div>
-                )}
+                    <div
+                        className="flex flex-col gap-3"
+                    >
+                        <h1 
+                            className="text-white text-lg"
+                        >
+                            Don't see yours here?
+                        </h1>
+                        <FilterBtn
+                            name = "Add Event"
+                            onClick={()=> handleNavigation("Add Event")}
+                            isActive = {selectedButton === "Add Event"}
+                        />
+                    </div>
+                </div>
             </div>
         </>
     )
