@@ -1,9 +1,11 @@
+import SideNav from "./Components/SideNav";
+
 function App() {
   return (
     <>
-      <h1 className="text-4xl">Testing</h1>
+      <SideNav/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
