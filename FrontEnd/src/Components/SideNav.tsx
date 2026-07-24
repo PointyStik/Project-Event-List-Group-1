@@ -1,20 +1,33 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import FilterBtn from "./FilterBtn";
 
-function SideNav(){
+interface SideNavProps {
+    currentNav?: string;
+}
 
+function SideNav({currentNav = "All"} : SideNavProps){
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [selectedButton, setSelectedButton] = useState<String>("All");
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const isAddEventPage = location.pathname === "/add-event";
 
     const handleNavigation = (buttonName: string) => {
-        setSelectedButton(buttonName);
+        navigate("/", {state: {filter: buttonName}});
     };
+
+    const handleAddEvent = () => {
+        navigate("/add-event");
+    }
+
+    const selectedLocation = location.state?.filter || currentNav;
+    const activeFilter = isAddEventPage? "Add Event" : selectedLocation;
 
     const toggle = ()=>{
         setIsOpen((prev)=>!prev);
     }
-
-
 
     return (
         <>
@@ -77,32 +90,32 @@ function SideNav(){
                         <FilterBtn
                             name = "All"
                             onClick={()=> handleNavigation("All")}
-                            isActive = {selectedButton === "All"}
+                            isActive = {activeFilter === "All"}
                         />
                         <FilterBtn
                                 name = "Greater Jakarta"
                             onClick={()=> handleNavigation("Greater Jakarta")}
-                            isActive = {selectedButton === "Greater Jakarta"}
+                            isActive = {activeFilter === "Greater Jakarta"}
                         />
                         <FilterBtn
                             name = "Bandung"
                             onClick={()=> handleNavigation("Bandung")}
-                            isActive = {selectedButton === "Bandung"}
+                            isActive = {activeFilter === "Bandung"}
                         />
                         <FilterBtn
                             name = "Malang"
                             onClick={()=> handleNavigation("Malang")}
-                            isActive = {selectedButton === "Malang"}
+                            isActive = {activeFilter === "Malang"}
                         />
                         <FilterBtn
                             name = "Semarang"
                             onClick={()=> handleNavigation("Semarang")}
-                            isActive = {selectedButton === "Semarang"}
+                            isActive = {activeFilter === "Semarang"}
                         />
                         <FilterBtn
                             name = "Online"
                             onClick={()=> handleNavigation("Online")}
-                            isActive = {selectedButton === "Online"}
+                            isActive = {activeFilter === "Online"}
                         />
                     </div>
                     <div
@@ -115,8 +128,8 @@ function SideNav(){
                         </h1>
                         <FilterBtn
                             name = "Add Event"
-                            onClick={()=> handleNavigation("Add Event")}
-                            isActive = {selectedButton === "Add Event"}
+                            onClick={handleAddEvent}
+                            isActive = {activeFilter === "Add Event"}
                         />
                     </div>
                 </div>
