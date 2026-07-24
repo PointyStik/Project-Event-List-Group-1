@@ -1,9 +1,9 @@
-import SideNav from "./Components/SideNav";
+import EventHub from "./Components/EventHub";
 
 function App() {
   return (
     <>
-      <SideNav/>
+      <EventHub/>
     </>
   );
 }
