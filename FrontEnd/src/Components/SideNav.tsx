@@ -32,7 +32,7 @@ function SideNav({currentNav = "All"} : SideNavProps){
     return (
         <>
             <div
-                className="bg-[#00214F] flex flex-col p-3 gap-6 md:max-w-xs md:min-h-screen md:py-6"
+                className="bg-[#00214F] flex flex-col p-3 gap-6 md:max-w-xs md:min-w-xs md:min-h-screen md:py-6"
             >
                 <div 
                     className="flex flex-row justify-between md:flex-col md:justify-center"
