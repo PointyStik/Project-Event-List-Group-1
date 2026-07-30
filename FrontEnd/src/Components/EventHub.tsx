@@ -4,9 +4,9 @@ import SideNav from "./SideNav";
 function EventHub() {
   return (
     <>
-      <div className="md:flex md:flex-row bg-[#E7EDFA] min-h-screen min-w-screen">
+      <div className="flex flex-col gap-4 items-center md:flex-row bg-[#E7EDFA] min-h-screen min-w-screen">
         <SideNav/>
-        <EventCard name="HISHOT 2026" category="Greater Jakarta" location="Alam Sutera"/>
+        <EventCard name="Nama Kegiatan" category="Greater Jakarta" location="Alam Sutera" description="desc" harga="Rp10.000" link="https://hishot.himtibinus.or.id/"/>
       </div>
     </>
   );

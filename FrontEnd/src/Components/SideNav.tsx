@@ -31,8 +31,14 @@ function SideNav({currentNav = "All"} : SideNavProps){
 
     return (
         <>
+            {isOpen && (
+                <div
+                    onClick={toggle}
+                    className="md:hidden fixed inset-0 bg-black/40  transition-opacity hover:cursor-pointer"
+                />
+            )}
             <div
-                className="bg-[#00214F] flex flex-col p-3 gap-6 md:max-w-xs md:min-w-xs md:min-h-screen md:py-6"
+                className="bg-[#00214F] flex flex-col p-3 gap-6 md:max-w-xs min-w-full md:min-w-xs md:min-h-screen py-6 sticky top-0 z-30"
             >
                 <div 
                     className="flex flex-row justify-between md:flex-col md:justify-center"
@@ -65,12 +71,6 @@ function SideNav({currentNav = "All"} : SideNavProps){
                             className="w-8 hover:cursor-pointer"
                             onClick={toggle} 
                         />
-                        {isOpen && (
-                            <div
-                                onClick={toggle}
-                                className="md:hidden fixed inset-0 bg-black/40 -z-30 transition-opacity hover:cursor-pointer"
-                            />
-                        )}
                     </div>
                 </div>    
                 <div 
