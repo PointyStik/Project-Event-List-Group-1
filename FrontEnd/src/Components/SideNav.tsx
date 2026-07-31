@@ -34,14 +34,14 @@ function SideNav({currentNav = "All"} : SideNavProps){
             {isOpen && (
                 <div
                     onClick={toggle}
-                    className="md:hidden fixed inset-0 bg-black/40  transition-opacity hover:cursor-pointer"
+                    className="lg:hidden fixed inset-0 bg-black/40  transition-opacity hover:cursor-pointer"
                 />
             )}
             <div
-                className="bg-[#00214F] flex flex-col p-3 gap-6 md:max-w-xs min-w-full md:min-w-xs md:min-h-screen py-6 sticky top-0 z-30"
+                className="bg-[#00214F] flex flex-col p-3 gap-6 lg:max-w-xs min-w-full lg:min-w-xs lg:min-h-screen py-6 sticky top-0 z-30"
             >
                 <div 
-                    className="flex flex-row justify-between md:flex-col md:justify-center"
+                    className="flex flex-row justify-between lg:flex-col lg:justify-center"
                 >
                     <div
                         className="flex flex-row gap-2"
@@ -63,7 +63,7 @@ function SideNav({currentNav = "All"} : SideNavProps){
                         </div>
                     </div>
                     <div 
-                        className="flex items-center md:hidden"
+                        className="flex items-center lg:hidden"
                     >
                         <img 
                             src="/Icons/HamburgerBtn.svg" 
@@ -76,7 +76,7 @@ function SideNav({currentNav = "All"} : SideNavProps){
                 <div 
                     className={`
                         ${isOpen? "flex" : "hidden"}
-                        md:flex flex-col justify-between gap-6 flex-1
+                        lg:flex flex-col justify-between gap-6 flex-1
                     `}
                 >
                     <div

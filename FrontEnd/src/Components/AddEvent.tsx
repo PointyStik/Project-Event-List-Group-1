@@ -78,6 +78,7 @@ function AddEvent() {
                       name="locationCategory"
                       value={category}
                       required
+                      className="hover:cursor-pointer"
                     />
                     {category}
                   </label>

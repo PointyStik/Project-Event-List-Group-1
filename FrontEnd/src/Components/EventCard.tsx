@@ -18,61 +18,75 @@ function EventCard({name, description, location, category, harga, imageUrl, link
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [canExpand, setCanExpand] = useState<boolean>(false);
     const textref = useRef<HTMLParagraphElement>(null);
+    const isExpandedRef = useRef(isExpanded);
 
-    useEffect(()=>{
+    useEffect(() => {
+        isExpandedRef.current = isExpanded;
+    }, [isExpanded]);
+    
+    useEffect( () => {
         const element = textref.current;
-        if (element){
-            const isOverflowing = element.scrollHeight>element.clientHeight;
-            setCanExpand(isOverflowing);
-        }
+        if (!element) return;
+        
+        const checkOverflow = () => {
+            if (isExpandedRef.current) return;
+            setCanExpand(element.scrollHeight>element.clientHeight +1);
+        };
+
+        checkOverflow();
+
+        const observer = new ResizeObserver(checkOverflow);
+        observer.observe(element);
+
+        return ()=> observer.disconnect();
     }, [description]);
 
     return (
         <>
             <div
-                className="w-full max-w-15/16 rounded-2xl bg-[#7599CA] p-4 flex flex-col md:flex-row gap-4 items-center"
+                className="w-full rounded-2xl bg-[#7599CA] p-3 sm:p-4 flex flex-col md:flex-row gap-4 items-center max-w-full"
             >
                 <div
-                    className="w-full aspect-square max-w-30 bg-[#E7EDFA] rounded-2xl flex justify-center"
+                    className="aspect-square w-20 sm:w-24 lg:w-40 bg-[#E7EDFA] rounded-2xl flex justify-center shrink-0"
                 >
-                    <img src={imageUrl || defaultImage} alt={name} />
+                    <img src={imageUrl || defaultImage} alt={name} className="w-full h-full object-contain"/>
                 </div>
                 <div 
-                    className="flex flex-1 flex-col gap-4"
+                    className="flex flex-1 flex-col gap-3 sm:gap-4 w-full min-h-0"
                 >
                     <div
-                        className="flex justify-between -mb-3"
+                        className="flex justify-between items-start gap-2"
                     >
                        <h1
-                            className="flex-1 break-all text-xl font-semibold text-[#00214F]"
+                            className="flex-1 wrap-break-word text-base sm:text-lg lg:text-xl font-semibold text-[#00214F] min-w-0"
                        >
                             {name}
                         </h1>
                         <div
-                            className="flex justify-between gap-1"
+                            className="flex justify-between gap-1 shrink-0"
                         >
                             <img 
                                 src="/Icons/Delete.svg" 
                                 alt="Delete" 
-                                className="hover:cursor-pointer"
+                                className="hover:cursor-pointer w-5 h-5 sm:w-6 sm:h-6"
                                 // Perlu tambahin OnClick buat PopUp Confirmation Delete
                             />
                             <img 
                                 src="/Icons/Edit.svg" 
                                 alt="Edit" 
-                                className="hover:cursor-pointer"
+                                className="hover:cursor-pointer w-5 h-5 sm:w-6 sm:h-6"
                                 // Perlu tambahin OnClick buat Edit
                             />
                         </div>
                     </div>
                     <div 
-                        className="flex-1 bg-white rounded-xl p-2 min-h-24 h-fit max-w-full"
+                        className="flex-1 bg-white rounded-xl p-2 min-h-20 sm:min-h-24 h-fit max-w-full"
                     >
                         <p 
                             ref = {textref}
-                            className={` wrap-break-word ${!isExpanded? "line-clamp-3" : ""}`}
+                            className={`text-sm lg:text-base wrap-break-word ${!isExpanded? "line-clamp-3" : ""}`}
                         >
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias deleniti doloremque vero nesciunt dolores in, ratione cumque culpa autem aperiam molestias, sit aliquid ullam, provident sunt vitae id voluptas beatae.lorem
+                            {description}
                         </p>
                         {canExpand && (
                             <button
@@ -84,38 +98,38 @@ function EventCard({name, description, location, category, harga, imageUrl, link
                         )}
                     </div>
                     <div
-                        className="flex flex-col md:flex-row justify-between gap-4"
+                        className="flex flex-col sm:flex-row justify-between gap-4 flex-wrap"
                     >
                         <a
-                            className="text-white bg-[#004CB5] rounded-4xl py-2 px-8 text-center font-medium hover:cursor-pointer justify-center"
+                            className="text-white bg-[#004CB5] rounded-4xl py-2 px-6 sm:px-8 text-center font-medium hover:cursor-pointer justify-center text-sm lg:text-lg w-full sm:w-auto sm:max-w-48 max-h-fit order-2 sm:order-1" 
                             href={link}
                             target="_blank"
                         >
                             Register
                         </a>
                         <div
-                            className="flex flex-row gap-2 max-h-full"
+                            className="flex flex-row gap-2 flex-wrap order-1 sm:order-2"
                         >
                             <div
-                                className="flex flex-row bg-white rounded-4xl px-2 md:px-3 py-2 border-2 gap-2 border-[#004CB5] shrink-0 justify-center max-w-2xl"
+                                className="flex flex-row bg-white rounded-4xl px-2 md:px-3 py-2 border-2 gap-2 border-[#004CB5] shrink-0 justify-start w-full min-w-0 items-center sm:w-fit"
                             >
                                 <img 
                                     src="/Icons/Location.svg" 
                                     alt="Location Icon" 
-                                    className="w-6"
+                                    className="w-4 sm:w-5 shrink-0"
                                 />
-                                <p className="truncate">{locationContent}</p>
+                                <p className="wrap-break-word text-sm lg:text-lg truncate">{locationContent}</p>
                             </div>
                             {harga && (
                                 <div
-                                    className="flex flex-row bg-white rounded-4xl px-2 md:px-3 py-2 border-2 gap-2 border-[#004CB5] shrink-0 justify-center"
+                                    className="flex flex-row bg-white rounded-4xl px-2 md:px-3 py-2 border-2 gap-2 border-[#004CB5] shrink-0 justify-start w-full min-w-0 items-center sm:w-fit"
                                 >
                                     <img 
                                         src="/Icons/Price.svg" 
                                         alt="Price Icon" 
-                                        className="w-6"
+                                        className="w-4"
                                     />
-                                    <p className="whitespace-nowrap">{harga}</p>
+                                    <p className="whitespace-nowrap text-sm lg:text-base">{harga}</p>
                                 </div>
                             )}
                         </div>
