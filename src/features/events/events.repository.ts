@@ -10,13 +10,17 @@ export const createEvent = async (data: CreateEventInput) => {
          description: data.description,
          date: new Date(data.date),
          location: data.location,
+         locationCategory: data.locationCategory,
          registrationLink: data.registrationLink,
+         price: data.price,
+         imageUrl: data.imageUrl,
       },
    });
 };
 
-export const getAllEvents = async () => {
+export const getAllEvents = async (locationCategory?: string) => {
    return await prisma.event.findMany({
+      where: locationCategory ? { locationCategory } : undefined,
       orderBy: { date: 'asc' },
    });
 };
@@ -35,7 +39,10 @@ export const updateEvent = async (id: string, data: UpdateEventInput) => {
          ...(data.description && { description: data.description }),
          ...(data.date && { date: new Date(data.date) }),
          ...(data.location && { location: data.location }),
+         ...(data.locationCategory && { locationCategory: data.locationCategory }),
          ...(data.registrationLink && { registrationLink: data.registrationLink }),
+         ...(data.price !== undefined && { price: data.price }),
+         ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl }),
       },
    });
 };

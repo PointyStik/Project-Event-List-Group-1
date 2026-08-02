@@ -13,5 +13,8 @@ model Event {
   description      String
   date             DateTime
   location         String
+  locationCategory String?
   registrationLink String   @default("")
+  price            String?
+  imageUrl         String?
 }

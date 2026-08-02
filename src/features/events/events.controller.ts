@@ -17,8 +17,9 @@ export const createEvent = async (req: Request, res: Response) => {
    });
 };
 
-export const getAllEvents = async (_req: Request, res: Response) => {
-   const events = await eventRepository.getAllEvents();
+export const getAllEvents = async (req: Request, res: Response) => {
+   const locationCategory = typeof req.query.locationCategory === 'string' ? req.query.locationCategory : undefined;
+   const events = await eventRepository.getAllEvents(locationCategory);
    return res.status(200).json({ data: events });
 };
 
