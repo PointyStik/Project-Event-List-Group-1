@@ -1,7 +1,11 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import SideNav from "./SideNav";
 
-const locationCategories = [
+const API_BASE_URL = "http://localhost:3000"; // Replace later if needed
+const EVENTS_ENDPOINT = "/api/events";
+
+const locations = [
   "Greater Jakarta",
   "Bandung",
   "Malang",
@@ -10,25 +14,52 @@ const locationCategories = [
 ];
 
 function AddEvent() {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageName, setImageName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const [location, setLocation] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
 
-    if (!file) return;
-
-    setImageName(file.name);
-
-    const reader = new FileReader();
-    reader.onload = () => setImagePreview(reader.result as string);
-    reader.readAsDataURL(file);
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+
+    const eventData = {
+      name: String(formData.get("name")),
+      description: String(formData.get("description")),
+      date: new Date(`${String(formData.get("date"))}T00:00:00.000Z`).toISOString(),
+      location,
+      registrationLink: String(formData.get("registrationLink")),
+    };
+
+    try {
+      setIsSubmitting(true);
+
+      const response = await fetch(
+        `${API_BASE_URL}${EVENTS_ENDPOINT}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(eventData),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create event");
+      }
+
+      navigate("/");
+    } catch {
+      setMessage(
+        "Could not submit the event. Check that the backend is running and that API_BASE_URL is correct.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,103 +81,83 @@ function AddEvent() {
             </label>
             <input
               id="event-name"
-              name="eventName"
+              name="name"
               placeholder="Insert event name"
               required
             />
 
-            <label htmlFor="event-location">
-              Location <span>*</span>
+            <label htmlFor="event-date">
+              Event Date <span>*</span>
             </label>
-            <input
-              id="event-location"
-              name="location"
-              placeholder="Insert event address/location"
-              required
-            />
+            <input id="event-date" name="date" type="date" required />
 
             <fieldset>
               <legend>
-                Category of Location <span>*</span>
+                Location <span>*</span>
               </legend>
 
               <div className="location-options">
-                {locationCategories.map((category) => (
-                  <label className="radio-option" key={category}>
+                {locations.map((item) => (
+                  <label className="radio-option" key={item}>
                     <input
                       type="radio"
-                      name="locationCategory"
-                      value={category}
+                      name="location"
+                      value={item}
+                      checked={location === item}
+                      onChange={(event) => setLocation(event.target.value)}
                       required
-                      className="hover:cursor-pointer"
                     />
-                    {category}
+                    {item}
                   </label>
                 ))}
               </div>
             </fieldset>
 
             <label htmlFor="registration-link">
-              Registration <span>*</span>
+              Registration Link <span>*</span>
             </label>
             <input
               id="registration-link"
-              name="registration"
+              name="registrationLink"
               type="url"
               placeholder="Insert registration link"
               required
             />
 
-            <label htmlFor="event-price">Price</label>
-            <input
-              id="event-price"
-              name="price"
-              placeholder="Insert entry fee (if free, just input -)"
-            />
-
-            <label htmlFor="event-description">Description</label>
+            <label htmlFor="event-description">
+              Description <span>*</span>
+            </label>
             <textarea
               id="event-description"
               name="description"
               placeholder="Description"
               rows={5}
+              required
             />
           </section>
 
           <aside className="event-submit-panel">
-            <label className="image-upload" htmlFor="event-image">
-              {imagePreview ? (
-                <img src={imagePreview} alt="Selected event preview" />
-              ) : (
-                <>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Zm2 11.75h12l-3.7-4.6-2.75 3.25-1.85-2.15L6 17.25ZM9 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
-                  </svg>
-                  <span>Choose an event picture</span>
-                  <small>PNG, JPG, or WEBP</small>
-                </>
-              )}
+            <div className="image-upload cursor-default">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Zm2 11.75h12l-3.7-4.6-2.75 3.25-1.85-2.15L6 17.25ZM9 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+              </svg>
+              <span>Image upload is not available yet</span>
+              <small>The current backend event model has no image field.</small>
+            </div>
 
-              <input
-                id="event-image"
-                name="image"
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={handleImageChange}
-              />
-            </label>
-
-            {imageName && <p className="image-name">{imageName}</p>}
-
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </button>
 
             <p className="submit-help">
-              Please make sure you have entered the correct event details
-              before you submit.
+              Please make sure you have entered the correct event details before
+              you submit.
             </p>
 
-            {submitted && (
-              <p className="submit-success" role="status">:D.</p>
+            {message && (
+              <p className="submit-success" role="alert">
+                {message}
+              </p>
             )}
           </aside>
         </form>
